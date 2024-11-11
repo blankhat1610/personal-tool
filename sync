@@ -1,0 +1,38 @@
+#!/bin/bash
+# Sync the local directory with the remote directory
+if [ "$#" -ne 3 ]; then
+    echo "USAGE: $0 <local_dir> <user@remote_ip> <remote_dir>"
+    echo "EXAMPLE: $0 . user@192.168.1.100 /home/user/tools"
+    exit 1
+fi
+
+LOCAL_DIR=$1
+REMOTE_HOST=$2
+REMOTE_DIR=$3
+
+# Ensure local directory has trailing slash for rsync
+LOCAL_DIR="${LOCAL_DIR%/}/"
+
+# Check if local directory exists
+if [ ! -d "$LOCAL_DIR" ]; then
+    echo "ERROR: Local directory $LOCAL_DIR does not exist."
+    exit 1
+fi
+
+# Check if rsync is installed
+if ! command -v rsync &> /dev/null; then
+    echo "ERROR: rsync is not installed."
+    exit 1
+fi
+
+echo "Syncing from $LOCAL_DIR to $REMOTE_HOST:$REMOTE_DIR"
+rsync -avz --exclude '.git' --exclude '.DS_Store' --exclude-from .gitignore \
+    "$LOCAL_DIR" \
+    "$REMOTE_HOST:$REMOTE_DIR" \
+    --delete
+
+if [ $? -eq 0 ]; then
+    echo "Sync completed successfully"
+else
+    echo "Sync failed"
+fi

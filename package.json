@@ -1,0 +1,18 @@
+{
+  "version": "0.0.0",
+  "name": "tool",
+  "type": "module",
+  "packageManager": "yarn@4.5.1",
+  "dependencies": {
+    "commander": "^12.1.0",
+    "inquirer": "^12.0.1",
+    "node-addon-api": "^8.2.1"
+  },
+  "scripts": {
+    "preinstall": "node -e \"if (!require('child_process').execSync('yarn -v').toString().startsWith('4.5')) { console.error('Error: This project requires Yarn 4.5.1. Please enable Corepack or run `corepack prepare yarn@4.5.1 --activate`.'); process.exit(1); }\"",
+    "build": "node-gyp rebuild"
+  },
+  "devDependencies": {
+    "node-gyp": "^10.2.0"
+  }
+}
